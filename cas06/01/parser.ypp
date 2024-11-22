@@ -1,0 +1,47 @@
+%{
+    // C++ kod
+    #include <iostream>
+    #include <cstdlib>
+
+    extern int yylex();
+
+    void yyerror(const std::string& poruka) {
+        std::cerr << poruka << std::endl;
+        exit(EXIT_FAILURE);
+    }
+%}
+
+%token BROJ
+
+%left '+' '-'
+%left '*' '/'
+
+%%
+
+program: nizIzraza
+    ;
+
+nizIzraza: nizIzraza izraz ';' { std::cout << $2 << std::endl; }
+    | izraz ';' { std::cout << $1 << std::endl; }
+    ;
+
+izraz: izraz '+' izraz { $$ = $1 + $3; }
+    | izraz '-' izraz { $$ = $1 - $3; }
+    | izraz '*' izraz { $$ = $1 * $3; }
+    | izraz '/' izraz { $$ = $1 / $3; }
+    | '(' izraz ')' { $$ = $2; }
+    | BROJ { $$ = $1; }
+    ;
+
+%%
+
+// C/C++ kod
+int main() {
+    if (yyparse() == 0) {
+        std::cout << "pripada KSJ" << std::endl;
+    }
+    else {
+        std::cout << "ne pripada" << std::endl;
+    }
+    return 0;
+}

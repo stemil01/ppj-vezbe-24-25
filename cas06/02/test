@@ -1,0 +1,16 @@
+a = 4;
+print(a);
+
+
+b = 5;
+c = (a+ 3)*b-b/-2;
+print(c);
+print_all;
+
+
+b != c;
+a >= b;
+
+b = -3*b;
+print(b);
+print(d);
