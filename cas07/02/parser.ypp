@@ -1,0 +1,206 @@
+%{
+    #include <iostream>
+    #include <cstdlib>
+    #include <map>
+    #include <vector>
+    #include "polinom.hpp"
+
+    std::map<std::string, Polinom *> promenljive;
+
+    void deinit() {
+        for (auto& p : promenljive) {
+            delete p.second;
+        }
+    }
+
+    extern int yylex();
+    extern int yylex_destroy();
+
+    void yyerror(const std::string& poruka) {
+        std::cerr << poruka << std::endl;
+        deinit();
+        exit(EXIT_FAILURE);
+    }
+%}
+
+%union {
+    double realan_broj;
+    std::string *niska;
+    Polinom *polinom;
+    bool logicka_vrednost;
+    std::vector<double> *niz;
+}
+
+%left '+' '-'
+%left '*'
+%right UMINUS
+%precedence '\'' '(' 
+
+%token PRINT POLY DEG INT
+%token EQ NEQ
+%token<niska> ID
+%token<realan_broj> BROJ
+
+%type<polinom> izraz
+%type<polinom> polinom
+%type<logicka_vrednost> poredjenje
+%type<niz> listaBrojeva
+
+%%
+
+nizNaredbi
+    : nizNaredbi naredba { }
+    | naredba { }
+    ;
+
+naredba
+    : POLY ID ';' {
+        if (promenljive.find(*$2) != promenljive.end()) {
+            std::string promenljiva = *$2;
+            delete $2;
+            yyerror("promenljiva " + promenljiva + " je vec deklarisana");
+        }
+
+        promenljive[*$2] = new Polinom();
+        delete $2;
+    }
+    | POLY ID '=' izraz ';' {
+        if (promenljive.find(*$2) != promenljive.end()) {
+            std::string promenljiva = *$2;
+            delete $2;
+            yyerror("promenljiva " + promenljiva + " je vec deklarisana");
+        }
+
+        promenljive[*$2] = $4;
+        delete $2;
+    }
+    | POLY ID '(' BROJ ')' ';' {
+        if (promenljive.find(*$2) != promenljive.end()) {
+            std::string promenljiva = *$2;
+            delete $2;
+            yyerror("promenljiva " + promenljiva + " je vec deklarisana");
+        }
+
+        promenljive[*$2] = new Polinom($4);
+        delete $2;
+    }
+    | ID '=' izraz ';' { 
+        if (promenljive.find(*$1) == promenljive.end()) {
+            std::string promenljiva = *$1;
+            delete $1;
+            yyerror("promenljiva " + promenljiva + " nije deklarisana");
+        }
+
+        delete promenljive[*$1];
+        promenljive[*$1] = $3;
+        delete $1;
+    }
+    | PRINT '(' izraz ')' ';' {
+        std::cout << *$3 << std::endl;
+        delete $3;
+    }
+    | poredjenje ';' {
+        std::cout << ($1 ? "True" : "False") << std::endl;
+    }
+    ;
+
+poredjenje
+    : izraz EQ izraz {
+        $$ = *$1 == *$3;
+        delete $1;
+        delete $3;
+    }
+    | izraz NEQ izraz {
+        $$ = *$1 != *$3;
+        delete $1;
+        delete $3;
+    }
+    ;
+
+izraz
+    : izraz '+' izraz {
+        $$ = new Polinom(*$1 + *$3);
+        delete $1;
+        delete $3;
+    }
+    | izraz '-' izraz {
+        $$ = new Polinom(*$1 - *$3);
+        delete $1;
+        delete $3;
+    }
+    | izraz '*' izraz {
+        $$ = new Polinom(*$1 * *$3);
+        delete $1;
+        delete $3;
+    }
+    | '-' izraz %prec UMINUS {
+        $$ = new Polinom(- *$2);
+        delete $2;
+    }
+    | '(' izraz ')' {
+        $$ = $2;
+    }
+    | izraz '(' BROJ ')' {
+        double vrednost = (*$1)($3);
+        $$ = new Polinom(std::vector<double>({vrednost}));
+        delete $1;
+    }
+    | DEG '(' izraz ')' {
+        double stepen = $3->get_stepen();
+        $$ = new Polinom(std::vector<double>({stepen}));
+        delete $3;
+    }
+    | izraz '\'' {
+        $$ = new Polinom($1->izvod());
+        delete $1;
+    }
+    | INT '(' izraz ',' BROJ ')' {
+        $$ = new Polinom($3->integral($5));
+        delete $3;
+    }
+    | ID {
+        if (promenljive.find(*$1) == promenljive.end()) {
+            std::string promenljiva = *$1;
+            delete $1;
+            yyerror("promenljiva " + promenljiva + " nije deklarisana");
+        }
+
+        $$ = new Polinom(*promenljive[*$1]);
+        delete $1;
+    }
+    | polinom {
+        $$ = $1;
+    }
+    ;
+
+polinom
+    : BROJ {
+        $$ = new Polinom(std::vector<double>({$1}));
+    }
+    | '<' listaBrojeva '>' {
+        $$ = new Polinom(*$2);
+        delete $2;
+    }
+    ;
+
+listaBrojeva
+    : BROJ ',' listaBrojeva {
+        $3->push_back($1);
+        $$ = $3;
+    }
+    | BROJ {
+        $$ = new std::vector<double>();
+        $$->push_back($1);
+    }
+    ;
+
+%%
+
+int main() {
+    if (yyparse() == 0) {
+        std::cout << "prihvaceno" << std::endl;
+    }
+    deinit();
+    yylex_destroy();
+    return 0;
+}
