@@ -1,0 +1,118 @@
+%{
+    #include <iostream>
+    #include <cstdlib>
+    #include "sintaksno_stablo.hpp"
+
+    extern int yylex();
+    extern int yylex_destroy();
+
+    void yyerror(const std::string &poruka) {
+        std::cerr << poruka << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    ASTCvor *ast = nullptr;
+%}
+
+%union {
+    double realan_broj;
+    std::string *niska;
+    ASTCvor *ast_cvor;
+}
+
+%token DEF PRINT EQ
+%token<realan_broj> BROJ
+%token<niska> ID
+
+%type<ast_cvor> niz_naredbi naredba izraz
+
+%left '+'
+%left '*'
+%right UMINUS
+
+%start program
+
+%%
+
+program
+    : niz_naredbi {
+        ast = $1;
+    }
+    ;
+
+niz_naredbi
+    : niz_naredbi naredba {
+        NizNaredbi *niz_naredbi = dynamic_cast<NizNaredbi *>($1);
+        niz_naredbi->dodaj_cvor($2);
+        $$ = niz_naredbi;
+    }
+    | naredba {
+        NizNaredbi *niz_naredbi = new NizNaredbi();
+        niz_naredbi->dodaj_cvor($1);
+        $$ = niz_naredbi;
+    }
+    ;
+
+naredba
+    : DEF ID '=' izraz ';' {
+        $$ = new Definicija(*$2, $4);
+        delete $2;
+    }
+    | ID '=' izraz ';' {
+        $$ = new Dodela(*$1, $3);
+        delete $1;
+    }
+    | PRINT '(' izraz ')' ';' {
+        $$ = new Ispis($3);
+    }
+    | izraz EQ izraz ';' {
+        $$ = new Poredjenje($1, $3);
+    }
+    ;
+
+izraz
+    : izraz '+' izraz {
+        $$ = new Sabiranje($1, $3);
+    }
+    | izraz '*' izraz {
+        $$ = new Mnozenje($1, $3);
+    }
+    | '-' izraz %prec UMINUS {
+        $$ = new Negacija($2);
+    }
+    | '(' izraz ')' {
+        $$ = $2;
+    }
+    | ID {
+        $$ = new Promenljiva(*$1);
+        delete $1;
+    }
+    | BROJ {
+        $$ = new Konstanta($1);
+    }
+    ;
+
+%%
+
+int main() {
+    if (yyparse() == 0) {
+        std::cout << "prihvaceno" << std::endl;
+    }
+
+    // ispis
+    std::cout << *ast << std::endl;
+
+    // interpretacija
+    TabelaSimbola tabela_simbola;
+    ast->interpretiraj(tabela_simbola);
+
+    // prevodjenje
+    std::ofstream fajl("program.asm");
+    ast->prevedi(fajl);
+    fajl.close();
+
+    delete ast;
+
+    yylex_destroy();
+    return 0;
+}
