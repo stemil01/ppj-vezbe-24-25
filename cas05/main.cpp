@@ -1,14 +1,14 @@
 #include <iostream>
-#include "polinom.h"
+#include "polinom.hpp"
 
 int main() {
     Polinom p(5), q;
 
-    p.dodaj_koeficijent(4);
-    p.dodaj_koeficijent(3);
-    p.dodaj_koeficijent(-1);
-    p.dodaj_koeficijent(5);
-    p.dodaj_koeficijent(6);
+    p.dodaj_na_kraj(4);
+    p.dodaj_na_kraj(3);
+    p.dodaj_na_kraj(-1);
+    p.dodaj_na_kraj(5);
+    p.dodaj_na_kraj(6);
 
     q = p;
 
