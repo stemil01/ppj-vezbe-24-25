@@ -1,6 +1,6 @@
 #include "sintaksno_stablo.hpp"
 
-int indeks_slobodnog_registra = 0;
+int indeks_slobodnog_registra = 1;
 int indeks_slobodne_labele = 0;
 
 // --------------------------------------------
@@ -44,6 +44,7 @@ double NizNaredbi::interpretiraj(TabelaSimbola &tabela_simbola) const {
     for (ASTCvor *cvor : m_naredbe) {
         cvor->interpretiraj(tabela_simbola);
     }
+
     // vracamo neku vrednost samo da bismo
     // se uskladili sa definicijom metoda
     return 0;
@@ -54,6 +55,9 @@ int NizNaredbi::prevedi(std::ofstream &fajl) const {
         cvor->prevedi(fajl);
         fajl << "\n";
     }
+
+    // vracamo neku vrednost samo da bismo
+    // se uskladili sa definicijom metoda
     return 0;
 }
 
@@ -92,8 +96,10 @@ double Definicija::interpretiraj(TabelaSimbola &tabela_simbola) const {
 
 int Definicija::prevedi(std::ofstream &fajl) const {
     int izraz_registar = m_izraz->prevedi(fajl);
-    fajl << "store r" << izraz_registar << ", [" << m_id << "]";
-    fajl << "\n";
+    fajl << "store r" << izraz_registar << ", [" << m_id << "]\n";
+
+    // vracamo neku vrednost samo da bismo
+    // se uskladili sa definicijom metoda
     return 0;
 }
 
@@ -132,8 +138,10 @@ double Dodela::interpretiraj(TabelaSimbola &tabela_simbola) const {
 
 int Dodela::prevedi(std::ofstream &fajl) const {
     int izraz_registar = m_izraz->prevedi(fajl);
-    fajl << "store r" << izraz_registar << ", [" << m_id << "]";
-    fajl << "\n";
+    fajl << "store r" << izraz_registar << ", [" << m_id << "]\n";
+
+    // vracamo neku vrednost samo da bismo
+    // se uskladili sa definicijom metoda
     return 0;
 }
 
@@ -187,8 +195,10 @@ double Ispis::interpretiraj(TabelaSimbola &tabela_simbola) const {
 int Ispis::prevedi(std::ofstream &fajl) const {
     int izraz_registar = m_cvor->prevedi(fajl);
     fajl << "mov r0, r" << izraz_registar << "\n";
-    fajl << "call print";
-    fajl << "\n";
+    fajl << "call print\n";
+
+    // vracamo neku vrednost samo da bismo
+    // se uskladili sa definicijom metoda
     return 0;
 }
 
@@ -215,9 +225,8 @@ double Sabiranje::interpretiraj(TabelaSimbola &tabela_simbola) const {
 
 int Sabiranje::prevedi(std::ofstream &fajl) const {
     int levi_registar = m_levi->prevedi(fajl);
-    int desni_registar =m_desni->prevedi(fajl);
-    fajl << "add r" << levi_registar << ", r" << desni_registar;
-    fajl << "\n";
+    int desni_registar = m_desni->prevedi(fajl);
+    fajl << "add r" << levi_registar << ", r" << desni_registar << "\n";
     return levi_registar;
 }
 
@@ -244,9 +253,8 @@ double Mnozenje::interpretiraj(TabelaSimbola &tabela_simbola) const {
 
 int Mnozenje::prevedi(std::ofstream &fajl) const {
     int levi_registar = m_levi->prevedi(fajl);
-    int desni_registar =m_desni->prevedi(fajl);
-    fajl << "mul r" << levi_registar << ", r" << desni_registar;
-    fajl << "\n";
+    int desni_registar = m_desni->prevedi(fajl);
+    fajl << "mul r" << levi_registar << ", r" << desni_registar << "\n";
     return levi_registar;
 }
 
@@ -270,8 +278,7 @@ double Negacija::interpretiraj(TabelaSimbola &tabela_simbola) const {
 
 int Negacija::prevedi(std::ofstream &fajl) const {
     int izraz_registar = m_cvor->prevedi(fajl);
-    fajl << "neg r" << izraz_registar;
-    fajl << "\n";
+    fajl << "neg r" << izraz_registar << "\n";
     return izraz_registar;
 }
 
@@ -362,6 +369,9 @@ int Poredjenje::prevedi(std::ofstream &fajl) const {
         fajl << "mov r0, 1\n";
     fajl << "label" << kraj_labela << ":\n";
         fajl << "call print\n";
+
+    // vracamo neku vrednost samo da bismo
+    // se uskladili sa definicijom metoda
     return 0;
 }
 

@@ -1,7 +1,6 @@
 #include <cmath>
 #include <iostream>
 #include <map>
-#include <memory_resource>
 #include <stdexcept>
 
 class Okruzenje {
