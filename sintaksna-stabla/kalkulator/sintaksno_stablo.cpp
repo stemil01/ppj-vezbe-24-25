@@ -35,8 +35,7 @@ void NizNaredbi::dodaj_cvor(ASTCvor *cvor) {
 
 void NizNaredbi::ispisi(std::ostream& os) const {
     for (ASTCvor *cvor : m_naredbe) {
-        cvor->ispisi(os);
-        os << "\n";
+        os << *cvor << "\n";
     }
 }
 
@@ -80,9 +79,7 @@ Definicija::~Definicija() {
 }
 
 void Definicija::ispisi(std::ostream& os) const {
-    os << "def " << m_id << " = ";
-    m_izraz->ispisi(os);
-    os << ";";
+    os << "def " << m_id << " = " << *m_izraz << ";";
 }
 
 double Definicija::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -122,9 +119,7 @@ Dodela::~Dodela() {
 }
 
 void Dodela::ispisi(std::ostream& os) const {
-    os << m_id << " = ";
-    m_izraz->ispisi(os);
-    os << ";";
+    os << m_id << " = " << *m_izraz << ";";
 }
 
 double Dodela::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -181,9 +176,7 @@ BinarniCvor::~BinarniCvor() {
 Ispis::Ispis(ASTCvor *cvor) : UnarniCvor(cvor) {}
 
 void Ispis::ispisi(std::ostream& os) const {
-    os << "print(";
-    m_cvor->ispisi(os);
-    os << ");";
+    os << "print(" << *m_cvor << ");";
 }
 
 double Ispis::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -212,11 +205,7 @@ Sabiranje::Sabiranje(ASTCvor *levi, ASTCvor *desni)
     : BinarniCvor(levi, desni) {}
 
 void Sabiranje::ispisi(std::ostream& os) const {
-    os << "(";
-    m_levi->ispisi(os);
-    os << ") + (";
-    m_desni->ispisi(os);
-    os << ")";
+    os << "(" << *m_levi << ") + (" << *m_desni << ")";
 }
 
 double Sabiranje::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -240,11 +229,7 @@ Mnozenje::Mnozenje(ASTCvor *levi, ASTCvor *desni)
     : BinarniCvor(levi, desni) {}
 
 void Mnozenje::ispisi(std::ostream& os) const {
-    os << "(";
-    m_levi->ispisi(os);
-    os << ") * (";
-    m_desni->ispisi(os);
-    os << ")";
+    os << "(" << *m_levi << ") * (" << *m_desni << ")";
 }
 
 double Mnozenje::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -267,9 +252,7 @@ ASTCvor *Mnozenje::kloniraj() const {
 Negacija::Negacija(ASTCvor *cvor) : UnarniCvor(cvor) {}
 
 void Negacija::ispisi(std::ostream& os) const {
-    os << "- (";
-    m_cvor->ispisi(os);
-    os << ")";
+    os << "- (" << *m_cvor << ")";
 }
 
 double Negacija::interpretiraj(TabelaSimbola &tabela_simbola) const {
@@ -338,11 +321,7 @@ Poredjenje::Poredjenje(ASTCvor *levi, ASTCvor *desni)
     : BinarniCvor(levi, desni) {}
 
 void Poredjenje::ispisi(std::ostream& os) const {
-    os << "(";
-    m_levi->ispisi(os);
-    os << ") == (";
-    m_desni->ispisi(os);
-    os << ");";
+    os << "(" << *m_levi << ") == (" << *m_desni << ");";
 }
 
 double Poredjenje::interpretiraj(TabelaSimbola &tabela_simbola) const {
