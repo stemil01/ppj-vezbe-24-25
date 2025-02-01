@@ -1,0 +1,115 @@
+%{
+    #include <iostream>
+    #include <cstdlib>
+    #include "funkcija.hpp"
+    #include "tabela_simbola.hpp"
+
+    extern int yylex();
+    extern int yylex_destroy();
+
+    int yyerror(const std::string &poruka) {
+        std::cerr << poruka << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    TabelaSimbola tabela_simbola;
+%}
+
+%union {
+    double realan_broj;
+    std::string *niska;
+    Funkcija *funkcija;
+}
+
+%token SIN COS PROMENLJIVA
+%token<niska> ID
+%token<realan_broj> BROJ
+
+%type<funkcija> izraz
+
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
+%precedence '(' '['
+%right '\''
+
+%%
+
+program
+    : niz_naredbi {}
+    ;
+
+niz_naredbi
+    : niz_naredbi naredba {}
+    | naredba {}
+    ;
+
+naredba
+    : ID '=' izraz '\n' {
+        tabela_simbola.dodeli_vrednost(*$1, $3);
+        delete $1;
+    }
+    | izraz '\n' {
+        std::cout << *$1 << std::endl;
+        delete $1;
+    }
+    | '\n' {}
+    ;
+
+izraz
+    : izraz '+' izraz {
+        $$ = new Sabiranje($1, $3);
+    }
+    | izraz '-' izraz {
+        $$ = new Oduzimanje($1, $3);
+    }
+    | izraz '*' izraz {
+        $$ = new Mnozenje($1, $3);
+    }
+    | izraz '/' izraz {
+        $$ = new Deljenje($1, $3);
+    }
+    | '-' izraz %prec UMINUS {
+        $$ = new Negacija($2);
+    }
+    | izraz '\'' {
+        $$ = $1->izvod();
+        delete $1;
+    }
+    | izraz '[' BROJ ']' {
+        $$ = new KonstantnaFunkcija($1->izracunaj($3));
+        delete $1;
+    }
+    | izraz '(' izraz ')' {
+        $$ = $1->komponuj($3);
+        delete $1;
+        delete $3;
+    }
+    | SIN '(' izraz ')' {
+        $$ = new Sin($3);
+    }
+    | COS '(' izraz ')' {
+        $$ = new Cos($3);
+    }
+    | BROJ {
+        $$ = new KonstantnaFunkcija($1);
+    }
+    | ID {
+        $$ = tabela_simbola.vrednost_promenljive(*$1)->kloniraj();
+        delete $1;
+    }
+    | PROMENLJIVA {
+        $$ = new IdentitetFunkcija();
+    }
+    ;
+
+%%
+
+int main() {
+    if (yyparse() == 0) {
+        std::cout << "prihvaceno" << std::endl;
+    }
+
+    yylex_destroy();
+    return 0;
+}
