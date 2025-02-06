@@ -83,6 +83,9 @@ izraz
     | '-' izraz %prec UMINUS {
         $$ = new NegacijaCvor($2);
     }
+    | '(' izraz ')' {
+        $$ = $2;
+    }
     | izraz '\'' {
         $$ = new IzvodCvor($1);
     }
