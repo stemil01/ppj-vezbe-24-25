@@ -89,103 +89,103 @@ BinarnaFunkcija::~BinarnaFunkcija() {
 
 // --------------------------------------------
 
-Negacija::Negacija(Funkcija *funkcija)
+NegacijaFunkcija::NegacijaFunkcija(Funkcija *funkcija)
     : UnarnaFunkcija(funkcija) {}
 
-double Negacija::izracunaj(double vrednost) const {
+double NegacijaFunkcija::izracunaj(double vrednost) const {
     return - m_funkcija->izracunaj(vrednost);
 }
 
-void Negacija::ispisi(std::ostream &os) const {
+void NegacijaFunkcija::ispisi(std::ostream &os) const {
     os << "- (";
     m_funkcija->ispisi(os);
     os << ")";
 }
 
-Funkcija *Negacija::izvod() const {
-    return new Negacija(m_funkcija->izvod());
+Funkcija *NegacijaFunkcija::izvod() const {
+    return new NegacijaFunkcija(m_funkcija->izvod());
 }
 
-Funkcija *Negacija::komponuj(Funkcija *funkcija) const {
-    return new Negacija(m_funkcija->komponuj(funkcija));
+Funkcija *NegacijaFunkcija::komponuj(Funkcija *funkcija) const {
+    return new NegacijaFunkcija(m_funkcija->komponuj(funkcija));
 }
 
-Funkcija *Negacija::kloniraj() const {
-    return new Negacija(*this);
+Funkcija *NegacijaFunkcija::kloniraj() const {
+    return new NegacijaFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Sin::Sin(Funkcija *funkcija)
+SinFunkcija::SinFunkcija(Funkcija *funkcija)
     : UnarnaFunkcija(funkcija) {}
 
-double Sin::izracunaj(double vrednost) const {
+double SinFunkcija::izracunaj(double vrednost) const {
     return sin(m_funkcija->izracunaj(vrednost));
 }
 
-void Sin::ispisi(std::ostream &os) const {
+void SinFunkcija::ispisi(std::ostream &os) const {
     os << "sin(";
     m_funkcija->ispisi(os);
     os << ")";
 }
 
-Funkcija *Sin::izvod() const {
-    return new Mnozenje(
-        new Cos(m_funkcija->kloniraj()),
+Funkcija *SinFunkcija::izvod() const {
+    return new MnozenjeFunkcija(
+        new CosFunkcija(m_funkcija->kloniraj()),
         m_funkcija->izvod()
     );
 }
 
-Funkcija *Sin::komponuj(Funkcija *funkcija) const {
-    return new Sin(m_funkcija->komponuj(funkcija));
+Funkcija *SinFunkcija::komponuj(Funkcija *funkcija) const {
+    return new SinFunkcija(m_funkcija->komponuj(funkcija));
 }
 
-Funkcija *Sin::kloniraj() const {
-    return new Sin(*this);
+Funkcija *SinFunkcija::kloniraj() const {
+    return new SinFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Cos::Cos(Funkcija *funkcija)
+CosFunkcija::CosFunkcija(Funkcija *funkcija)
     : UnarnaFunkcija(funkcija) {}
 
-double Cos::izracunaj(double vrednost) const {
+double CosFunkcija::izracunaj(double vrednost) const {
     return cos(m_funkcija->izracunaj(vrednost));
 }
 
-void Cos::ispisi(std::ostream &os) const {
+void CosFunkcija::ispisi(std::ostream &os) const {
     os << "cos(";
     m_funkcija->ispisi(os);
     os << ")";
 }
 
-Funkcija *Cos::izvod() const {
-    return new Negacija(
-        new Mnozenje(
-            new Sin(m_funkcija->kloniraj()),
+Funkcija *CosFunkcija::izvod() const {
+    return new NegacijaFunkcija(
+        new MnozenjeFunkcija(
+            new SinFunkcija(m_funkcija->kloniraj()),
             m_funkcija->izvod()
         )
     );
 }
 
-Funkcija *Cos::komponuj(Funkcija *funkcija) const {
-    return new Cos(m_funkcija->komponuj(funkcija));
+Funkcija *CosFunkcija::komponuj(Funkcija *funkcija) const {
+    return new CosFunkcija(m_funkcija->komponuj(funkcija));
 }
 
-Funkcija *Cos::kloniraj() const {
-    return new Cos(*this);
+Funkcija *CosFunkcija::kloniraj() const {
+    return new CosFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Sabiranje::Sabiranje(Funkcija *leva, Funkcija *desna)
+SabiranjeFunkcija::SabiranjeFunkcija(Funkcija *leva, Funkcija *desna)
     : BinarnaFunkcija(leva, desna) {}
 
-double Sabiranje::izracunaj(double vrednost) const {
+double SabiranjeFunkcija::izracunaj(double vrednost) const {
     return m_leva->izracunaj(vrednost) + m_desna->izracunaj(vrednost);
 }
 
-void Sabiranje::ispisi(std::ostream &os) const {
+void SabiranjeFunkcija::ispisi(std::ostream &os) const {
     os << "(";
     m_leva->ispisi(os);
     os << ") + (";
@@ -193,34 +193,34 @@ void Sabiranje::ispisi(std::ostream &os) const {
     os << ")";
 }
 
-Funkcija *Sabiranje::izvod() const {
-    return new Sabiranje(
+Funkcija *SabiranjeFunkcija::izvod() const {
+    return new SabiranjeFunkcija(
         m_leva->izvod(),
         m_desna->izvod()
     );
 }
 
-Funkcija *Sabiranje::komponuj(Funkcija *funkcija) const {
-    return new Sabiranje(
+Funkcija *SabiranjeFunkcija::komponuj(Funkcija *funkcija) const {
+    return new SabiranjeFunkcija(
         m_leva->komponuj(funkcija),
         m_desna->komponuj(funkcija)
     );
 }
 
-Funkcija *Sabiranje::kloniraj() const {
-    return new Sabiranje(*this);
+Funkcija *SabiranjeFunkcija::kloniraj() const {
+    return new SabiranjeFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Oduzimanje::Oduzimanje(Funkcija *leva, Funkcija *desna)
+OduzimanjeFunkcija::OduzimanjeFunkcija(Funkcija *leva, Funkcija *desna)
     : BinarnaFunkcija(leva, desna) {}
 
-double Oduzimanje::izracunaj(double vrednost) const {
+double OduzimanjeFunkcija::izracunaj(double vrednost) const {
     return m_leva->izracunaj(vrednost) - m_desna->izracunaj(vrednost);
 }
 
-void Oduzimanje::ispisi(std::ostream &os) const {
+void OduzimanjeFunkcija::ispisi(std::ostream &os) const {
     os << "(";
     m_leva->ispisi(os);
     os << ") - (";
@@ -228,34 +228,34 @@ void Oduzimanje::ispisi(std::ostream &os) const {
     os << ")";
 }
 
-Funkcija *Oduzimanje::izvod() const {
-    return new Oduzimanje(
+Funkcija *OduzimanjeFunkcija::izvod() const {
+    return new OduzimanjeFunkcija(
         m_leva->izvod(),
         m_desna->izvod()
     );
 }
 
-Funkcija *Oduzimanje::komponuj(Funkcija *funkcija) const {
-    return new Oduzimanje(
+Funkcija *OduzimanjeFunkcija::komponuj(Funkcija *funkcija) const {
+    return new OduzimanjeFunkcija(
         m_leva->komponuj(funkcija),
         m_desna->komponuj(funkcija)
     );
 }
 
-Funkcija *Oduzimanje::kloniraj() const {
-    return new Oduzimanje(*this);
+Funkcija *OduzimanjeFunkcija::kloniraj() const {
+    return new OduzimanjeFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Mnozenje::Mnozenje(Funkcija *leva, Funkcija *desna)
+MnozenjeFunkcija::MnozenjeFunkcija(Funkcija *leva, Funkcija *desna)
     : BinarnaFunkcija(leva, desna) {}
 
-double Mnozenje::izracunaj(double vrednost) const {
+double MnozenjeFunkcija::izracunaj(double vrednost) const {
     return m_leva->izracunaj(vrednost) * m_desna->izracunaj(vrednost);
 }
 
-void Mnozenje::ispisi(std::ostream &os) const {
+void MnozenjeFunkcija::ispisi(std::ostream &os) const {
     os << "(";
     m_leva->ispisi(os);
     os << ") * (";
@@ -263,40 +263,40 @@ void Mnozenje::ispisi(std::ostream &os) const {
     os << ")";
 }
 
-Funkcija *Mnozenje::izvod() const {
-    return new Sabiranje(
-        new Mnozenje(
+Funkcija *MnozenjeFunkcija::izvod() const {
+    return new SabiranjeFunkcija(
+        new MnozenjeFunkcija(
             m_leva->izvod(),
             m_desna->kloniraj()
         ),
-        new Mnozenje(
+        new MnozenjeFunkcija(
             m_leva->kloniraj(),
             m_desna->izvod()
         )
     );
 }
 
-Funkcija *Mnozenje::komponuj(Funkcija *funkcija) const {
-    return new Mnozenje(
+Funkcija *MnozenjeFunkcija::komponuj(Funkcija *funkcija) const {
+    return new MnozenjeFunkcija(
         m_leva->komponuj(funkcija),
         m_desna->komponuj(funkcija)
     );
 }
 
-Funkcija *Mnozenje::kloniraj() const {
-    return new Mnozenje(*this);
+Funkcija *MnozenjeFunkcija::kloniraj() const {
+    return new MnozenjeFunkcija(*this);
 }
 
 // --------------------------------------------
 
-Deljenje::Deljenje(Funkcija *leva, Funkcija *desna)
+DeljenjeFunkcija::DeljenjeFunkcija(Funkcija *leva, Funkcija *desna)
     : BinarnaFunkcija(leva, desna) {}
 
-double Deljenje::izracunaj(double vrednost) const {
+double DeljenjeFunkcija::izracunaj(double vrednost) const {
     return m_leva->izracunaj(vrednost) / m_desna->izracunaj(vrednost);
 }
 
-void Deljenje::ispisi(std::ostream &os) const {
+void DeljenjeFunkcija::ispisi(std::ostream &os) const {
     os << "(";
     m_leva->ispisi(os);
     os << ") / (";
@@ -304,34 +304,34 @@ void Deljenje::ispisi(std::ostream &os) const {
     os << ")";
 }
 
-Funkcija *Deljenje::izvod() const {
-    return new Deljenje(
-        new Oduzimanje(
-            new Mnozenje(
+Funkcija *DeljenjeFunkcija::izvod() const {
+    return new DeljenjeFunkcija(
+        new OduzimanjeFunkcija(
+            new MnozenjeFunkcija(
                 m_leva->izvod(),
                 m_desna->kloniraj()
             ),
-            new Mnozenje(
+            new MnozenjeFunkcija(
                 m_leva->kloniraj(),
                 m_desna->izvod()
             )
         ),
-        new Mnozenje(
+        new MnozenjeFunkcija(
             m_desna->kloniraj(),
             m_desna->kloniraj()
         )
     );
 }
 
-Funkcija *Deljenje::komponuj(Funkcija *funkcija) const {
-    return new Deljenje(
+Funkcija *DeljenjeFunkcija::komponuj(Funkcija *funkcija) const {
+    return new DeljenjeFunkcija(
         m_leva->komponuj(funkcija),
         m_desna->komponuj(funkcija)
     );
 }
 
-Funkcija *Deljenje::kloniraj() const {
-    return new Deljenje(*this);
+Funkcija *DeljenjeFunkcija::kloniraj() const {
+    return new DeljenjeFunkcija(*this);
 }
 
 // --------------------------------------------

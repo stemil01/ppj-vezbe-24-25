@@ -212,7 +212,7 @@ void NegacijaCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *NegacijaCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Negacija(m_cvor->interpretiraj(tabela_simbola));
+    return new NegacijaFunkcija(m_cvor->interpretiraj(tabela_simbola));
 }
 
 ASTCvor *NegacijaCvor::kloniraj() const {
@@ -228,7 +228,7 @@ void SinCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *SinCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Sin(m_cvor->interpretiraj(tabela_simbola));
+    return new SinFunkcija(m_cvor->interpretiraj(tabela_simbola));
 }
 
 ASTCvor *SinCvor::kloniraj() const {
@@ -244,7 +244,7 @@ void CosCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *CosCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Cos(m_cvor->interpretiraj(tabela_simbola));
+    return new CosFunkcija(m_cvor->interpretiraj(tabela_simbola));
 }
 
 ASTCvor *CosCvor::kloniraj() const {
@@ -303,7 +303,7 @@ void SabiranjeCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *SabiranjeCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Sabiranje(
+    return new SabiranjeFunkcija(
         m_levi->interpretiraj(tabela_simbola),
         m_desni->interpretiraj(tabela_simbola)
     );
@@ -323,7 +323,7 @@ void OduzimanjeCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *OduzimanjeCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Oduzimanje(
+    return new OduzimanjeFunkcija(
         m_levi->interpretiraj(tabela_simbola),
         m_desni->interpretiraj(tabela_simbola)
     );
@@ -343,7 +343,7 @@ void MnozenjeCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *MnozenjeCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Mnozenje(
+    return new MnozenjeFunkcija(
         m_levi->interpretiraj(tabela_simbola),
         m_desni->interpretiraj(tabela_simbola)
     );
@@ -363,7 +363,7 @@ void DeljenjeCvor::ispisi(std::ostream &os) const {
 }
 
 Funkcija *DeljenjeCvor::interpretiraj(TabelaSimbola &tabela_simbola) const {
-    return new Deljenje(
+    return new DeljenjeFunkcija(
         m_levi->interpretiraj(tabela_simbola),
         m_desni->interpretiraj(tabela_simbola)
     );

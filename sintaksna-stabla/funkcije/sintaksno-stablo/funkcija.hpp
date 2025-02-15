@@ -86,9 +86,9 @@ protected:
 
 // --------------------------------------------
 
-class Negacija : public UnarnaFunkcija {
+class NegacijaFunkcija : public UnarnaFunkcija {
 public:
-    Negacija(Funkcija *funkcija);
+    NegacijaFunkcija(Funkcija *funkcija);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -100,9 +100,9 @@ public:
 
 // --------------------------------------------
 
-class Sin : public UnarnaFunkcija {
+class SinFunkcija : public UnarnaFunkcija {
 public:
-    Sin(Funkcija *funkcija);
+    SinFunkcija(Funkcija *funkcija);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -114,9 +114,9 @@ public:
 
 // --------------------------------------------
 
-class Cos : public UnarnaFunkcija {
+class CosFunkcija : public UnarnaFunkcija {
 public:
-    Cos(Funkcija *funkcija);
+    CosFunkcija(Funkcija *funkcija);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -128,9 +128,9 @@ public:
 
 // --------------------------------------------
 
-class Sabiranje : public BinarnaFunkcija {
+class SabiranjeFunkcija : public BinarnaFunkcija {
 public:
-    Sabiranje(Funkcija *leva, Funkcija *desna);
+    SabiranjeFunkcija(Funkcija *leva, Funkcija *desna);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -142,9 +142,9 @@ public:
 
 // --------------------------------------------
 
-class Oduzimanje : public BinarnaFunkcija {
+class OduzimanjeFunkcija : public BinarnaFunkcija {
 public:
-    Oduzimanje(Funkcija *leva, Funkcija *desna);
+    OduzimanjeFunkcija(Funkcija *leva, Funkcija *desna);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -156,9 +156,9 @@ public:
 
 // --------------------------------------------
 
-class Mnozenje : public BinarnaFunkcija {
+class MnozenjeFunkcija : public BinarnaFunkcija {
 public:
-    Mnozenje(Funkcija *leva, Funkcija *desna);
+    MnozenjeFunkcija(Funkcija *leva, Funkcija *desna);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
@@ -170,9 +170,9 @@ public:
 
 // --------------------------------------------
 
-class Deljenje : public BinarnaFunkcija {
+class DeljenjeFunkcija : public BinarnaFunkcija {
 public:
-    Deljenje(Funkcija *leva, Funkcija *desna);
+    DeljenjeFunkcija(Funkcija *leva, Funkcija *desna);
 
     // metode iz natklase
     double izracunaj(double vrednost) const override;
