@@ -97,9 +97,7 @@ double NegacijaFunkcija::izracunaj(double vrednost) const {
 }
 
 void NegacijaFunkcija::ispisi(std::ostream &os) const {
-    os << "- (";
-    m_funkcija->ispisi(os);
-    os << ")";
+    os << "- (" << *m_funkcija << ")";
 }
 
 Funkcija *NegacijaFunkcija::izvod() const {
@@ -124,9 +122,7 @@ double SinFunkcija::izracunaj(double vrednost) const {
 }
 
 void SinFunkcija::ispisi(std::ostream &os) const {
-    os << "sin(";
-    m_funkcija->ispisi(os);
-    os << ")";
+    os << "sin(" << *m_funkcija << ")";
 }
 
 Funkcija *SinFunkcija::izvod() const {
@@ -154,9 +150,7 @@ double CosFunkcija::izracunaj(double vrednost) const {
 }
 
 void CosFunkcija::ispisi(std::ostream &os) const {
-    os << "cos(";
-    m_funkcija->ispisi(os);
-    os << ")";
+    os << "cos(" << *m_funkcija << ")";
 }
 
 Funkcija *CosFunkcija::izvod() const {
@@ -186,11 +180,7 @@ double SabiranjeFunkcija::izracunaj(double vrednost) const {
 }
 
 void SabiranjeFunkcija::ispisi(std::ostream &os) const {
-    os << "(";
-    m_leva->ispisi(os);
-    os << ") + (";
-    m_desna->ispisi(os);
-    os << ")";
+    os << "(" << *m_leva << ") + (" << *m_desna << ")";
 }
 
 Funkcija *SabiranjeFunkcija::izvod() const {
@@ -221,11 +211,7 @@ double OduzimanjeFunkcija::izracunaj(double vrednost) const {
 }
 
 void OduzimanjeFunkcija::ispisi(std::ostream &os) const {
-    os << "(";
-    m_leva->ispisi(os);
-    os << ") - (";
-    m_desna->ispisi(os);
-    os << ")";
+    os << "(" << *m_leva << ") - (" << *m_desna << ")";
 }
 
 Funkcija *OduzimanjeFunkcija::izvod() const {
@@ -256,11 +242,7 @@ double MnozenjeFunkcija::izracunaj(double vrednost) const {
 }
 
 void MnozenjeFunkcija::ispisi(std::ostream &os) const {
-    os << "(";
-    m_leva->ispisi(os);
-    os << ") * (";
-    m_desna->ispisi(os);
-    os << ")";
+    os << "(" << *m_leva << ") * (" << *m_desna << ")";
 }
 
 Funkcija *MnozenjeFunkcija::izvod() const {
@@ -297,11 +279,7 @@ double DeljenjeFunkcija::izracunaj(double vrednost) const {
 }
 
 void DeljenjeFunkcija::ispisi(std::ostream &os) const {
-    os << "(";
-    m_leva->ispisi(os);
-    os << ") / (";
-    m_desna->ispisi(os);
-    os << ")";
+    os << "(" << *m_leva << ") / (" << *m_desna << ")";
 }
 
 Funkcija *DeljenjeFunkcija::izvod() const {
