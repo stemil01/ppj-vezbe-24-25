@@ -51,8 +51,7 @@ Funkcija *IdentitetFunkcija::izvod() const {
 }
 
 Funkcija *IdentitetFunkcija::komponuj(Funkcija *funkcija) const {
-    // mora kloniraj zbog kompozicije kod npr. binarnih funkcija
-    return funkcija->kloniraj();
+    return funkcija->kloniraj(); // moramo da pravimo kopiju!
 }
 
 Funkcija *IdentitetFunkcija::kloniraj() const {
