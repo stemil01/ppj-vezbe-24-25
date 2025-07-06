@@ -1,0 +1,125 @@
+%{
+    #include <iostream>
+    #include <cstdlib>
+    #include "sintaksno_stablo.hpp"
+
+    extern int yylex();
+    extern int yylex_destroy();
+
+    int yyerror(const std::string &poruka) {
+        std::cerr << poruka << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    ASTCvor *ast = nullptr;
+%}
+
+%union {
+    int ceo_broj;
+    std::string *niska;
+    ASTCvor *ast_cvor;
+}
+
+%token BEGIN_TOKEN END_TOKEN EQ PRINT IF THEN ELSE WHILE DO
+%token<ceo_broj> BROJ
+%token<niska> ID
+
+%type<ast_cvor> program niz_naredbi naredba izraz
+
+%left '='
+%left '<' '>'
+%left '+' '-'
+%nonassoc THEN
+%nonassoc ELSE
+
+%start program
+
+%%
+
+program
+    : BEGIN_TOKEN niz_naredbi END_TOKEN '.' {
+        ast = new PotprogramCvor($2);
+    }
+    ;
+
+niz_naredbi
+    : niz_naredbi naredba {
+        NizNaredbiCvor *niz_naredbi = dynamic_cast<NizNaredbiCvor *>($1);
+        niz_naredbi->dodaj_cvor($2);
+        $$ = niz_naredbi;
+    }
+    | naredba {
+        NizNaredbiCvor *niz_naredbi = new NizNaredbiCvor();
+        niz_naredbi->dodaj_cvor($1);
+        $$ = niz_naredbi;
+    }
+    ;
+
+naredba
+    : ID EQ izraz ';' {
+        $$ = new DodelaCvor(*$1, $3);
+        delete $1;
+    }
+    | PRINT '(' izraz ')' ';' {
+        $$ = new IspisCvor($3);
+    }
+    | IF izraz THEN naredba {
+        $$ = new IfCvor($2, $4);
+    }
+    | IF izraz THEN naredba ELSE naredba {
+        $$ = new IfElseCvor($2, $4, $6);
+    }
+    | WHILE izraz DO naredba {
+        $$ = new WhileCvor($2, $4);
+    }
+    | BEGIN_TOKEN niz_naredbi END_TOKEN {
+        $$ = new PotprogramCvor($2);
+    }
+    ;
+
+izraz
+    : izraz '+' izraz {
+        $$ = new SabiranjeCvor($1, $3);
+    }
+    | izraz '-' izraz {
+        $$ = new OduzimanjeCvor($1, $3);
+    }
+    | izraz '=' izraz {
+        $$ = new JednakostCvor($1, $3);
+    }
+    | izraz '<' izraz {
+        $$ = new ManjeCvor($1, $3);
+    }
+    | izraz '>' izraz {
+        $$ = new VeceCvor($1, $3);
+    }
+    | '(' izraz ')' {
+        $$ = $2;
+    }
+    | ID {
+        $$ = new PromenljivaCvor(*$1);
+        delete $1;
+    }
+    | BROJ {
+        $$ = new KonstantaCvor($1);
+    }
+    ;
+
+%%
+
+int main() {
+    if (yyparse() == 0) {
+        std::cout << "prihvaceno" << std::endl;
+    }
+
+    std::cout << *ast << std::endl;
+
+    TabelaSimbola tabela_simbola;
+    ast->interpretiraj(tabela_simbola);
+
+    delete ast;
+
+    yylex_destroy();
+
+    return 0;
+}
