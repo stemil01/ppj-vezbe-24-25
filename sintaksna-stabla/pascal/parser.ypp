@@ -29,8 +29,8 @@
 %left '='
 %left '<' '>'
 %left '+' '-'
-%nonassoc THEN
-%nonassoc ELSE
+%precedence THEN
+%precedence ELSE
 
 %start program
 
