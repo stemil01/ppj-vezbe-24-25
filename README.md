@@ -9,4 +9,4 @@
 Ту можете наћи скрипту која прати кодове који су у директоријуму `sintaksna-stabla`, као и детаљније информације везане за литературу.
 
 [ppj-stranica]: https://www.prevodioci.matf.bg.ac.rs/PrevodjenjeProgramskihJezika.html
-[stefan-ppj]: https://poincare.matf.bg.ac.rs/~stefan.milenkovic/ppj/
+[stefan-ppj]: https://poincare.matf.bg.ac.rs/~stefan.milenkovic/ppj-24-25/
